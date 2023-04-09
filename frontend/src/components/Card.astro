@@ -28,6 +28,7 @@ const last_tag = Astro.url.searchParams.get("tag") || null;
     class="absolute h-full w-full object-cover"
     src={baseUrl + imageUrl}
     alt="Card Background"
+    loading="lazy"
   />
   <div class="absolute inset-0 bg-gray-800 bg-opacity-60"></div>
   <div class="absolute inset-0 flex justify-center items-center">

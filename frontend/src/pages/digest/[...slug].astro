@@ -23,7 +23,7 @@ function getGeneratedQuerySetForBackButton() {
 }
 
 const { data: article, nextArticle, prevArticle } = data;
-const { title, body, image, created_at, tag, keywords } = article;
+const { title, body, image, created_at, tag, keywords, description } = article;
 const dateOptions: object = {
   year: "numeric",
   month: "2-digit",
@@ -37,7 +37,7 @@ const formattedPublishedAt = new Date(created_at).toLocaleDateString(
 
 <Layout
   title={title}
-  description={body.split("\n")[0]}
+  description={description}
   imageUrl={baseUrl + image}
   keywords={keywords}
   robots={true}
@@ -73,6 +73,7 @@ const formattedPublishedAt = new Date(created_at).toLocaleDateString(
       src={baseUrl + image}
       alt={title}
       class="rounded-lg object-cover max-h-[20rem] md:max-h-[20rem] w-full"
+      loading="lazy"
     />
     <h1 class="text-3xl font-bold text-orange-100 mt-8">
       {title}
@@ -114,7 +115,7 @@ const formattedPublishedAt = new Date(created_at).toLocaleDateString(
   <div>
     <div class="btn-group grid grid-cols-2 mt-6">
       <a
-        href={prevArticle?.slug && `/article/${prevArticle?.slug}`}
+        href={prevArticle?.slug && `/digest/${prevArticle?.slug}`}
         aria-disabled={prevArticle?.slug || true}
         class:list={[
           prevArticle?.slug || "pointer-events-none",
@@ -123,7 +124,7 @@ const formattedPublishedAt = new Date(created_at).toLocaleDateString(
         ]}>Previous</a
       >
       <a
-        href={nextArticle?.slug && `/article/${nextArticle?.slug}`}
+        href={nextArticle?.slug && `/digest/${nextArticle?.slug}`}
         aria-disabled={prevArticle?.slug || true}
         class:list={[
           nextArticle?.slug || "pointer-events-none",

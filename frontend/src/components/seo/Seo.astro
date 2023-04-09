@@ -1,4 +1,6 @@
 ---
+import { baseUrl } from "../../../conf";
+
 interface Props {
   url?: string;
   title?: string;
@@ -9,12 +11,16 @@ interface Props {
 }
 
 const { title, imageUrl, robots, description, keywords } = Astro.props;
+
+function getUrl() {
+  return Astro.request.url;
+}
 ---
 
 {description && <meta name="description" content={description} />}
 {keywords && <meta name="keywords" content={keywords} />}
 
-<link rel="canonical" href={import.meta.url} />
+<link rel="canonical" href={getUrl()} />
 {title && <meta property="og:site_name" content={title} />}
 <meta property="og:type" content="website" />
 {title && <meta property="og:title" content={title} />}
@@ -26,7 +32,7 @@ const { title, imageUrl, robots, description, keywords } = Astro.props;
     />
   )
 }
-<meta property="og:url" content={import.meta.url} />
+<meta property="og:url" content={getUrl()} />
 {imageUrl && <meta property="og:image" content={imageUrl} />}
 {imageUrl && <meta property="og:image:secure_url" content={imageUrl} />}
 <meta property="og:image:type" content="image/jpeg" />

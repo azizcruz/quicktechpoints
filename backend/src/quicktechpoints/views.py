@@ -22,7 +22,7 @@ def highlight_text(text, search_term):
 
 class GetAllArticlesView(APIView):
     serializer_class = ArticleSerializer
-    
+
     def get(self, request, format=None):
         try:
             page = int(request.GET.get('page', 1))
@@ -52,12 +52,15 @@ class GetAllArticlesView(APIView):
             # Calculate number of items to skip
             skip = (page - 1) * limit
 
-            articles = Article.objects.filter(query).order_by('-created_at').prefetch_related('tag')[skip:skip+limit]
+            articles = Article.objects.filter(query).order_by(
+                '-created_at').prefetch_related('tag')[skip:skip+limit]
 
             if q:
                 articles = [{
                     **article.__dict__,
-                    'title': highlight_text(article.title, q)
+                    'title': highlight_text(article.title, q),
+                    'tag': article.tag,
+                    'image': article.image
                 } for article in articles]
 
             articles = self.serializer_class(articles, many=True).data
@@ -78,21 +81,23 @@ class GetAllArticlesView(APIView):
             return Response({'error': 'Server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
 class GetArticleView(APIView):
     serializer_class = ArticleSerializer
 
     def get(self, request, slug, format=None):
         try:
             # Find the article with the given slug
-            article = Article.objects.filter(slug=slug).prefetch_related('tag').first()
+            article = Article.objects.filter(
+                slug=slug).prefetch_related('tag').first()
 
             if not article:
                 return Response({'message': 'Article not found'}, status=status.HTTP_404_NOT_FOUND)
 
             # Find the next and previous articles
-            prev_article = Article.objects.filter(id__lt=article.id).order_by('-id').first()
-            next_article = Article.objects.filter(id__gt=article.id).order_by('id').first()
+            prev_article = Article.objects.filter(
+                id__lt=article.id).order_by('-id').first()
+            next_article = Article.objects.filter(
+                id__gt=article.id).order_by('id').first()
 
             if article:
                 article = self.serializer_class(article).data
@@ -110,7 +115,8 @@ class GetArticleView(APIView):
         except Exception as e:
             print(e)
             return Response({'error': 'Server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+
 class GetTodayArticleView(APIView):
     serializer_class = ArticleSerializer
 
@@ -120,34 +126,44 @@ class GetTodayArticleView(APIView):
 
             # Find articles of today
             today = timezone.now().date()
-            start_of_day = timezone.make_aware(datetime.combine(today, datetime.min.time()))
-            end_of_day = timezone.make_aware(datetime.combine(today, datetime.max.time()))
+            start_of_day = timezone.make_aware(
+                datetime.combine(today, datetime.min.time()))
+            end_of_day = timezone.make_aware(
+                datetime.combine(today, datetime.max.time()))
 
-            articles = Article.objects.filter(created_at__range=(start_of_day, end_of_day), is_published=True).order_by('created_at').prefetch_related('tag')
+            articles = Article.objects.filter(created_at__range=(
+                start_of_day, end_of_day), is_published=True).order_by('created_at').prefetch_related('tag')
             total_articles = articles.count()
-            
+
             if id:
                 article = articles.filter(id=id).first()
             else:
                 article = articles.first()
 
             if article:
-                
+
                 # Find the next and previous articles
-                prev_articles = articles.filter(id__lt=article.id).order_by('-id') 
-                next_articles = articles.filter(id__gt=article.id).order_by('id')
+                prev_articles = articles.filter(
+                    id__lt=article.id).order_by('-id')
+                next_articles = articles.filter(
+                    id__gt=article.id).order_by('id')
                 prev_article = prev_articles.first()
                 next_article = next_articles.first()
                 first_article = articles.first()
                 last_article = articles.last()
 
-                article_position = total_articles - articles.filter(id__gt=article.id).count()
+                article_position = total_articles - \
+                    articles.filter(id__gt=article.id).count()
 
                 article = self.serializer_class(article).data
-                prev_article = self.serializer_class(prev_article).data if prev_article else None
-                next_article = self.serializer_class(next_article).data if next_article else None
-                first_article = self.serializer_class(first_article).data if first_article else None
-                last_article = self.serializer_class(last_article).data if last_article else None
+                prev_article = self.serializer_class(
+                    prev_article).data if prev_article else None
+                next_article = self.serializer_class(
+                    next_article).data if next_article else None
+                first_article = self.serializer_class(
+                    first_article).data if first_article else None
+                last_article = self.serializer_class(
+                    last_article).data if last_article else None
 
                 return Response({
                     'data': article,
@@ -164,7 +180,7 @@ class GetTodayArticleView(APIView):
                     'nextArticle': None,
                     'prevArticle': None,
                     'total_articles': total_articles,
-                     'first_article': None,
+                    'first_article': None,
                     'last_article': None,
                     'position': 0
                 }, status=status.HTTP_200_OK)

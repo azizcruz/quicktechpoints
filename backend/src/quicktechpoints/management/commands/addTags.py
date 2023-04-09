@@ -6,43 +6,10 @@ class Command(BaseCommand):
     help = 'Insert tags'
 
     def handle(self, *args, **kwargs):
-        tagsToAdd = [
-            "Electric Cars",
-            "Home Appliances",
-            "PC",
-            "Laptops",
-            "Smartphones",
-            "Artificial intelligence (AI)",
-            "Machine learning (ML)",
-            "Robotics",
-            "Virtual reality (VR)",
-            "Augmented reality (AR)",
-            "Internet of Things (IoT)",
-            "Blockchain",
-            "Cybersecurity",
-            "Cloud computing",
-            "Data analytics",
-            "Mobile development",
-            "Web development",
-            "Programming languages",
-            "Operating systems",
-            "Hardware",
-            "Software engineering",
-            "User experience (UX)",
-            "User interface (UI)",
-            "E-commerce",
-            "Digital marketing",
-            "Social media",
-            "Gaming",
-            "Network infrastructure",
-            "Information technology (IT)",
-            "Big data",
-            "Quantum computing",
-            "3D printing",
-            "Nanotechnology",
-            "Biotechnology",
-            "Renewable energy technology",
-        ]
+        tagsToAdd = ['Hardware', 'Software', 'Mobile technology', 'Gaming', 'Artificial Intelligence',
+                     'Cybersecurity', 'Social media', 'Internet of Things (IoT)', 'Cloud computing',
+                     'Virtual reality and augmented reality', 'Blockchain and cryptocurrency',
+                     'Emerging technologies', 'E-commerce', 'Startups and entrepreneurship', 'Innovation and research']
 
         for tag in tagsToAdd:
             try:

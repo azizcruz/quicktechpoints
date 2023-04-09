@@ -10,10 +10,12 @@ def article_image_file_path(instance, filename):
     filename = f'{uuid.uuid4()}.{ext}'
     return os.path.join('', filename)
 
+
 class Article(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     body = models.TextField()
+    description = models.CharField(max_length=500, default='')
     is_published_to_facebook = models.BooleanField(default=False)
     is_published_to_twitter = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
@@ -32,6 +34,7 @@ class Article(models.Model):
         no_p = self.body.replace('<p>', '').replace('</p>', '')
         self.body = no_p
         super().save(*args, **kwargs)
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=255, unique=True)

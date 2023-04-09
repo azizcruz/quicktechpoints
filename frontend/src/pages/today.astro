@@ -20,7 +20,7 @@ try {
     first_article,
     last_article,
   } = data;
-  var { title, body, image, created_at, tag, keywords } = article;
+  var { title, body, image, created_at, tag, keywords, description } = article;
 
   var dateOptions: object = {
     year: "numeric",
@@ -43,7 +43,7 @@ function isFirstArticle() {
 
 <Layout
   title={title ?? ""}
-  description={body?.split("\n")[0] ?? ""}
+  description={description}
   imageUrl={baseUrl + image ?? ""}
   keywords={keywords ?? ""}
   robots={true}
@@ -97,6 +97,7 @@ function isFirstArticle() {
             src={baseUrl + image}
             alt={title}
             class="rounded-lg object-cover max-h-[20rem] md:max-h-[20rem] w-full"
+            loading="lazy"
           />
           <h1 class="text-3xl font-bold text-orange-100 mt-8">{title}</h1>
           <div class="my-4 border-t-amber-100" />
