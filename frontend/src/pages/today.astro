@@ -1,0 +1,191 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { baseUrl } from "../../conf";
+
+const id = Astro.url.searchParams.get("id") || null;
+
+let url = `${baseUrl}/api/articles/today${id ? `?id=${id}` : ""}`;
+
+const data = await fetch(url)
+  .then((res) => res)
+  .then((res) => res.json());
+
+try {
+  var {
+    data: article,
+    nextArticle,
+    prevArticle,
+    total_articles,
+    position,
+    first_article,
+    last_article,
+  } = data;
+  var { title, body, image, created_at, tag, keywords } = article;
+
+  var dateOptions: object = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  var formattedPublishedAt = new Date(created_at).toLocaleDateString(
+    "en-US",
+    dateOptions
+  );
+} catch (error) {}
+
+function isLastArticle() {
+  return parseInt(last_article?.id) === parseInt(id);
+}
+function isFirstArticle() {
+  return parseInt(first_article?.id) === parseInt(id);
+}
+---
+
+<Layout
+  title={title ?? ""}
+  description={body?.split("\n")[0] ?? ""}
+  imageUrl={baseUrl + image ?? ""}
+  keywords={keywords ?? ""}
+  robots={true}
+>
+  <h3 class="text-2xl text-center font-bold mt-4">Today's Articles</h3>
+  <p class="text-center max-w-md mx-auto text-sm opacity-60">
+    Stay up-to-date with our latest curated collection of today's top tech news
+    and insights
+  </p>
+  {
+    total_articles > 0 && (
+      <div class="flex justify-between items-center">
+        <a
+          href={!isFirstArticle() && `/today?id=${first_article?.id}`}
+          aria-disabled={isFirstArticle() || total_articles === 1 || true}
+          class:list={[
+            !isFirstArticle() || total_articles === 1 || "pointer-events-none",
+            !isFirstArticle() || total_articles === 1 || "opacity-50",
+            total_articles > 1 || "pointer-events-none",
+            total_articles > 1 || "opacity-50",
+            "btn btn-sm text-xs !text-blue-200",
+          ]}
+        >
+          First
+        </a>
+        <button
+          class="btn mx-auto !text-blue-200"
+          disabled
+        >{`${position}/${total_articles}`}</button>
+        <a
+          href={!isLastArticle() && `/today?id=${last_article?.id}`}
+          aria-disabled={isLastArticle() || true}
+          class:list={[
+            !isLastArticle() || "pointer-events-none",
+            !isLastArticle() || "opacity-50",
+            total_articles > 1 || "pointer-events-none",
+            total_articles > 1 || "opacity-50",
+            "btn btn-sm text-xs !text-blue-200",
+          ]}
+        >
+          Last
+        </a>
+      </div>
+    )
+  }
+  {
+    article ? (
+      <>
+        <article class="mt-4">
+          <img
+            src={baseUrl + image}
+            alt={title}
+            class="rounded-lg object-fit max-h-[20rem] md:max-h-[20rem] w-full"
+          />
+          <h1 class="text-3xl font-bold text-orange-100 mt-8">{title}</h1>
+          <div class="my-4 border-t-amber-100" />
+          <div class="flex justify-between">
+            <small>{formattedPublishedAt}</small>
+            <div class="flex items-center justify-center ml-4 mb-4">
+              {tag.map((tag) => (
+                <span class="text-white mr-2">{tag.name}</span>
+              ))}
+              {tag.length > 0 && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6 text-white"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 6h.008v.008H6V6z"
+                  />
+                </svg>
+              )}
+            </div>
+          </div>
+
+          <div class="my-4 border-t-amber-100" />
+          <article set:html={body} class="details-page" />
+        </article>
+        <div>
+          <p class="text-center">
+            <a
+              href={`https://www.google.com/search?q=${title.replace(
+                /\s/g,
+                "+"
+              )}`}
+              class="hover:underline text-blue-500"
+              target="_blank"
+            >
+              read more about this
+            </a>
+          </p>
+        </div>
+        <div>
+          <div class="btn-group grid grid-cols-2 mt-6">
+            <a
+              href={prevArticle?.id && `/today?id=${prevArticle?.id}`}
+              aria-disabled={prevArticle?.id || true}
+              class:list={[
+                prevArticle?.id || "pointer-events-none",
+                prevArticle?.id || "opacity-50",
+                "btn btn-outline",
+              ]}
+            >
+              Previous
+            </a>
+            <a
+              href={nextArticle?.id && `/today?id=${nextArticle?.id}`}
+              aria-disabled={prevArticle?.id || true}
+              class:list={[
+                nextArticle?.id || "pointer-events-none",
+                nextArticle?.id || "opacity-50",
+                "btn btn-outline",
+              ]}
+            >
+              Next
+            </a>
+          </div>
+        </div>
+      </>
+    ) : (
+      <div class="text-2xl text-center mt-40">On the way, stay tuned 😬</div>
+    )
+  }
+</Layout>
+
+<style>
+  p {
+    line-height: 2rem;
+    letter-spacing: 0.05em;
+  }
+  p + p {
+    margin-top: 2rem;
+  }
+</style>

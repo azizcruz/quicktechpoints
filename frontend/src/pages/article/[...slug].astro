@@ -1,0 +1,146 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { baseUrl } from "../../../conf";
+
+const { slug } = Astro.params;
+
+let url = `${baseUrl}/api/articles/${slug}`;
+
+const data = await fetch(url)
+  .then((res) => res)
+  .then((res) => res.json());
+
+const lastCardId = Astro.url.searchParams.get("last_card") || null;
+const lastPage = Astro.url.searchParams.get("last_page") || null;
+const lastTag = Astro.url.searchParams.get("last_tag") || null;
+
+function getGeneratedQuerySetForBackButton() {
+  return `${lastPage ? "?page=" + lastPage : ""}${
+    !lastPage && lastTag ? "?tag=" + lastTag : ""
+  }${lastPage && lastTag ? "&tag=" + lastTag : ""}${
+    lastCardId ? "#" + lastCardId : ""
+  }`;
+}
+
+const { data: article, nextArticle, prevArticle } = data;
+const { title, body, image, created_at, tag, keywords } = article;
+const dateOptions: object = {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+};
+const formattedPublishedAt = new Date(created_at).toLocaleDateString(
+  "en-US",
+  dateOptions
+);
+---
+
+<Layout
+  title={title}
+  description={body.split("\n")[0]}
+  imageUrl={baseUrl + image}
+  keywords={keywords}
+  robots={true}
+>
+  {
+    lastCardId && (
+      <div class="mt-4">
+        <a
+          href={`/${getGeneratedQuerySetForBackButton()}`}
+          class="flex btn btn-secondary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+            />
+          </svg>
+          <span class="ml-2">Go back</span>
+        </a>
+      </div>
+    )
+  }
+  <article class="mt-4">
+    <img
+      src={baseUrl + image}
+      alt={title}
+      class="rounded-lg object-fit max-h-[20rem] md:max-h-[20rem] w-full"
+    />
+    <h1 class="text-3xl font-bold text-orange-100 mt-8">
+      {title}
+    </h1>
+    <div class="my-4 border-t-amber-100"></div>
+    <div class="flex justify-between">
+      <small>{formattedPublishedAt}</small>
+      <div class="flex items-center justify-center ml-4 mb-4">
+        {tag.map((tag) => <span class="text-white mr-2">{tag.name}</span>)}
+        {
+          tag.length > 0 && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 text-white"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 6h.008v.008H6V6z"
+              />
+            </svg>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="my-4 border-t-amber-100"></div>
+    <article set:html={body} class="details-page" />
+  </article>
+  <div>
+    <div class="btn-group grid grid-cols-2 mt-6">
+      <a
+        href={prevArticle?.slug && `/article/${prevArticle?.slug}`}
+        aria-disabled={prevArticle?.slug || true}
+        class:list={[
+          prevArticle?.slug || "pointer-events-none",
+          prevArticle?.slug || "opacity-50",
+          "btn btn-outline",
+        ]}>Previous</a
+      >
+      <a
+        href={nextArticle?.slug && `/article/${nextArticle?.slug}`}
+        aria-disabled={prevArticle?.slug || true}
+        class:list={[
+          nextArticle?.slug || "pointer-events-none",
+          nextArticle?.slug || "opacity-50",
+          "btn btn-outline",
+        ]}>Next</a
+      >
+    </div>
+  </div>
+</Layout>
+
+<style>
+  p {
+    line-height: 2rem;
+    letter-spacing: 0.05em;
+  }
+  p + p {
+    margin-top: 2rem;
+  }
+</style>

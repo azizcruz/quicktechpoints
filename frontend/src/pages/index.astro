@@ -1,0 +1,93 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
+import { baseUrl } from "../../conf";
+
+interface Article {
+  id: string;
+  title: string;
+  body: string;
+  image: string;
+  createdAt: string;
+  slug: string;
+  tag: string;
+}
+
+const tag = Astro.url.searchParams.get("tag") || false;
+const q = Astro.url.searchParams.get("q");
+const p = Astro.url.searchParams.get("page");
+
+let url = `${baseUrl}/api/articles`;
+
+if (tag) {
+  url += `${url.indexOf("?") < 0 ? "?" : "&"}${tag ? "tag=" + tag : ""}`;
+}
+
+if (p) {
+  url += `${url.indexOf("?") < 0 ? "?" : "&"}${p ? "page=" + p : ""}`;
+}
+
+if (q) {
+  url = `${baseUrl}/api/articles${"?q=" + q}`;
+}
+
+const data = await fetch(url)
+  .then((res) => res)
+  .then((res) => res.json());
+
+const { page, totalPages, totalItems } = data.pagination;
+const nextPage = page + 1;
+const prevPage = page - 1;
+
+const { articles } = (await data.data) as { articles: [] };
+---
+
+<Layout title="Articles">
+  <div class="flex justify-end mb-2 pr-1">
+    <span>{totalItems} Article{totalItems > 1 ? "s" : ""}</span>
+  </div>
+  <div>
+    {
+      articles.map((article: Article) => (
+        <Card
+          articleId={article.id}
+          href={article.image}
+          title={article.title}
+          body={article.body}
+          imageUrl={article.image}
+          slug={article.slug}
+          createdAt={article.createdAt}
+          tag={article.tag}
+          id={article.id}
+        />
+      ))
+    }
+  </div>
+  <div class="flex justify-center my-6">
+    <div class="btn-group">
+      <a
+        href={`/?page=${prevPage}${!q && tag ? "&tag=" + tag : ""}${
+          q ? "&q=" + q : ""
+        }`}
+        class:list={[
+          page === 1 && "pointer-events-none",
+          page === 1 && "opacity-30",
+          "btn",
+        ]}>«</a
+      >
+      <div class="btn">Page {page}</div>
+      <a
+        href={`/?page=${nextPage}${!q && tag ? "&tag=" + tag : ""}${
+          q ? "&q=" + q : ""
+        }`}
+        class:list={[
+          nextPage > totalPages && "pointer-events-none",
+          nextPage > totalPages && "opacity-30",
+          "btn",
+        ]}>»</a
+      >
+    </div>
+  </div>
+</Layout>
+
+<style></style>

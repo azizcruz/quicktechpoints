@@ -1,0 +1,52 @@
+---
+interface Props {
+  url?: string;
+  title?: string;
+  imageUrl?: string;
+  robots?: boolean;
+  description?: string;
+  keywords?: string;
+}
+
+const { title, imageUrl, robots, description, keywords } = Astro.props;
+---
+
+{description && <meta name="description" content={description} />}
+{keywords && <meta name="keywords" content={keywords} />}
+
+<link rel="canonical" href={import.meta.url} />
+{title && <meta property="og:site_name" content={title} />}
+<meta property="og:type" content="website" />
+{title && <meta property="og:title" content={title} />}
+{
+  description && (
+    <meta
+      property="og:description"
+      content={description.replace(/(<([^>]+)>)/gi, "")}
+    />
+  )
+}
+<meta property="og:url" content={import.meta.url} />
+{imageUrl && <meta property="og:image" content={imageUrl} />}
+{imageUrl && <meta property="og:image:secure_url" content={imageUrl} />}
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content={import.meta.env.SITE} />
+<meta property="og:locale" content="en_US" />
+
+{imageUrl && <meta name="twitter:card" content={imageUrl} />}
+<meta name="twitter:site" content="@yourtwitterhandle" />
+{title && <meta name="twitter:title" content={title} />}
+{
+  description && (
+    <meta
+      name="twitter:description"
+      content={description.replace(/(<([^>]+)>)/gi, "")}
+    />
+  )
+}
+{imageUrl && <meta name="twitter:image" content={imageUrl} />}
+{title && <meta name="twitter:image:alt" content={title} />}
+
+{robots && <meta name="robots" content="index, noindex" />}
