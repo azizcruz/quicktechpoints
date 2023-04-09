@@ -7,6 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         tagsToAdd = [
+            "Electric Cars",
             "Home Appliances",
             "PC",
             "Laptops",

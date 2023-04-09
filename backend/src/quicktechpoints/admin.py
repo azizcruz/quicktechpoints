@@ -5,8 +5,12 @@ from django.db import models
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_published', 'is_published_to_twitter', 'is_published_to_facebook')
-    list_filter = ('title', 'is_published', 'is_published_to_twitter', 'is_published_to_facebook')
+    list_display = ('title', 'is_published',
+                    'is_published_to_twitter', 'is_published_to_facebook')
+    list_filter = ('title', 'is_published',
+                   'is_published_to_twitter', 'is_published_to_facebook')
+    list_editable = ('is_published', 'is_published_to_twitter',
+                     'is_published_to_facebook')
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
 

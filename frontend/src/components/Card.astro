@@ -34,7 +34,7 @@ const last_tag = Astro.url.searchParams.get("tag") || null;
     <div class="text-center">
       <h2 class="text-xl font-bold text-white mb-2 px-8" set:html={title} />
       <a
-        href={`/article/${slug}?last_card=${id}${
+        href={`/digest/${slug}?last_card=${id}${
           last_page ? "&last_page=" + last_page : ""
         }${last_tag ? "&last_tag=" + last_tag : ""}`}
         class="btn btn-sm">Quick Read</a
