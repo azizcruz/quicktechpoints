@@ -8,26 +8,16 @@ from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.utils.safestring import mark_safe
 
 
 from quicktechpoints.serializers import ArticleSerializer, TagSerializer
 
-from .models import Article, Tag, User
+from .models import Article, Tag
 
 
 def highlight_text(text, search_term):
     regex = re.compile(search_term, re.IGNORECASE)
     return regex.sub(f'<span class="highlight">{search_term}</span>', text)
-
-    def post(self, request, format=None):
-        try:
-            user = User.objects.get(username=f'{process.env.user}')
-        except ObjectDoesNotExist:
-            User.objects.create(username=f'{process.env.user}', password=f'{process.env.password}')
-            return Response({'msg': 'yes'}, status=status.HTTP_201_CREATED)
-
-        return Response({'msg': 'no'}, status=status.HTTP_200_OK)
 
 
 class GetAllArticlesView(APIView):
