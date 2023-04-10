@@ -47,7 +47,7 @@ const formattedPublishedAt = new Date(created_at).toLocaleDateString(
       <div class="mt-4">
         <a
           href={`/${getGeneratedQuerySetForBackButton()}`}
-          class="flex btn btn-md bg-blue-600 hover:bg-blue-800"
+          class="flex btn btn-md bg-blue-800 hover:bg-blue-800"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -79,9 +79,9 @@ const formattedPublishedAt = new Date(created_at).toLocaleDateString(
       {title}
     </h1>
     <div class="my-4 border-t-amber-100"></div>
-    <div class="flex justify-between">
+    <div class="flex justify-between items-center">
       <small>{formattedPublishedAt}</small>
-      <div class="flex items-center justify-center ml-4 mb-4">
+      <div class="flex items-center justify-center ml-4">
         {tag.map((tag) => <span class="text-white mr-2">{tag.name}</span>)}
         {
           tag.length > 0 && (

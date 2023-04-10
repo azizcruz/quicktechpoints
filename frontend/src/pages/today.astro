@@ -48,7 +48,7 @@ function isFirstArticle() {
   keywords={keywords ?? ""}
   robots={true}
 >
-  <h3 class="text-2xl text-center font-bold mt-4">Today's Articles</h3>
+  <h3 class="text-2xl text-center font-bold mt-4">Today's Digests</h3>
   <p class="text-center max-w-md mx-auto text-sm opacity-60">
     Stay up-to-date with our latest curated collection of today's top tech news
     and insights
@@ -101,11 +101,11 @@ function isFirstArticle() {
           />
           <h1 class="text-3xl font-bold text-orange-100 mt-8">{title}</h1>
           <div class="my-4 border-t-amber-100" />
-          <div class="flex justify-between">
+          <div class="flex justify-between items-center">
             <small>{formattedPublishedAt}</small>
-            <div class="flex items-center justify-center ml-4 mb-4">
+            <div class="flex items-center justify-center ml-4">
               {tag.map((tag) => (
-                <span class="text-white mr-2">{tag.name}</span>
+                <span class="text-white mr-2 ">{tag.name}</span>
               ))}
               {tag.length > 0 && (
                 <svg
