@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-btckpntt1ynt#d$x4m-beotu)x@%(8^4z3k+!xy3dxc248^ari'
+SECRET_KEY = os.environ.get('secret_key', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ.get('env', None) == 'dev' else False
 
 ALLOWED_HOSTS = []
 
@@ -78,11 +82,11 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'myapp',
-        'USER': 'root',
-        'PASSWORD': 'password1',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.environ.get('db_name', None),
+        'USER': os.environ.get('db_user', None),
+        'PASSWORD': os.environ.get('db_pass', None),
+        'HOST': os.environ.get('db_host', None),
+        'PORT': os.environ.get('db_port', None),
     }
 }
 
