@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { baseUrl } from "../../conf";
+import { baseUrl, imageBaseUrl } from "../../conf";
 
 const id = Astro.url.searchParams.get("id") || null;
 
@@ -94,7 +94,7 @@ function isFirstArticle() {
       <>
         <article class="mt-4">
           <img
-            src={baseUrl + image}
+            src={imageBaseUrl + image}
             alt={title}
             class="rounded-lg object-cover max-h-[20rem] md:max-h-[20rem] w-full"
             loading="lazy"
