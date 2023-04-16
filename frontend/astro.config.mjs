@@ -15,9 +15,6 @@ import image from "@astrojs/image";
 export default defineConfig({
   integrations: [tailwind(), image()],
   output: "server",
-  server: {
-    port: 8080
-  },
   adapter: node({
     mode: "standalone"
   })

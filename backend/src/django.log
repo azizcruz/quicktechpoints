@@ -1,0 +1,17 @@
+2023-04-16 08:23:09,531 INFO Watching for file changes with StatReloader
+2023-04-16 08:23:16,814 INFO /backend/src/src/settings.py changed, reloading.
+2023-04-16 08:23:17,116 INFO Watching for file changes with StatReloader
+2023-04-16 08:23:52,246 INFO Watching for file changes with StatReloader
+2023-04-16 08:23:54,475 ERROR Invalid HTTP_HOST header: 'webserver'. You may need to add 'webserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.8/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/usr/local/lib/python3.8/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/usr/local/lib/python3.8/site-packages/django/http/request.py", line 167, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'webserver'. You may need to add 'webserver' to ALLOWED_HOSTS.
+2023-04-16 08:23:54,497 WARNING Bad Request: /api/articles
+2023-04-16 08:24:57,270 INFO /backend/src/src/settings.py changed, reloading.

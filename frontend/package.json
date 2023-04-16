@@ -3,13 +3,14 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --host",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/image": "^0.16.6",
     "@astrojs/node": "^5.0.4",
     "@astrojs/tailwind": "^3.0.1",
     "astro": "^2.0.17",

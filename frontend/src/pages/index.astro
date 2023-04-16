@@ -31,6 +31,8 @@ if (q) {
   url = `${baseUrl}/api/articles${"?q=" + q}`;
 }
 
+console.log("aa", url);
+
 const data = await fetch(url)
   .then((res) => res)
   .then((res) => res.json());

@@ -1,2 +1,3 @@
-export const baseUrl =
-  "dev" === import.meta.env.ENV.toString() ? "http://localhost:8000" : "";
+export const baseUrl = import.meta.env.DEV
+  ? "http://web:8000"
+  : "http://webserver:80";

@@ -1,0 +1,75 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${db_user}
+      POSTGRES_PASSWORD: ${db_pass}
+      POSTGRES_DB: ${db_name}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - network1
+
+    volumes:
+      - /tmp/app/mysqld:/var/run/mysqld
+      - ./db:/var/lib/mysql
+  web:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    working_dir: /backend/src/
+    env_file:
+      - .env
+    command: python manage.py runserver 0.0.0.0:8000
+    expose:
+      - 8000
+    volumes:
+      - ./backend:/backend
+      - static_volume:/backend/src/static
+      - media_volume:/backend/src/media
+    depends_on:
+      - db
+    networks:
+      - network1
+
+  frontend:
+    env_file:
+      - .env
+    build: 
+      context: .
+      dockerfile: Dockerfile.frontend
+    command: node dist/server/entry.mjs
+    depends_on:
+      - web
+    ports:
+      - "3000:3000"
+    networks:
+      - network1
+
+  webserver:
+    build: ./nginx
+    container_name: loader
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+      - frontend
+    volumes:
+      - static_volume:/backend/src/static
+      - media_volume:/backend/src/media
+    networks:
+      - network1
+
+networks:
+  network1:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+
+
